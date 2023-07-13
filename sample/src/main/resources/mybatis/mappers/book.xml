@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+  "http://mybastis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.book">
+	<resultMap id="bookMap" type="bookCopyVO">
+		<id property="bookSeq" column="book_seq"></id>
+		<result property="isbn" column="book_isbn"/>
+		<result property="title" column="book_title"/>
+		<result property="author" column="book_author"/>
+		<result property="publishDate" column="book_published_date"/>
+		<result property="bookPosition" column="book_position"/>
+		<result property="bookStaus" column="book_status"/>
+	</resultMap>
+	
+	<!-- 전체 도서 리스트 -->
+	<select id="selectAllBook" resultMap="bookMap" resultType="bookCopyVO">
+		<![CDATA[
+			select a.*, b.* from book_info a inner join book_copy b on a.book_isbn=b.book_isbn
+		]]>
+	</select>
+	
+	<!-- 선택 도서 정보 -->
+	<select id="selectBookBySeq" resultMap="bookMap" resultType="bookCopyVo" parameterType="java.lang.Integer">
+		<![CDATA[
+		select a.*, b.* from book_info a inner join book_copy b on a.book_isbn=b.book_isbn 
+		where b.book_seq = #{bookSeq}
+		
+		]]>	
+	</select>
+	
+	<!-- 도서 수정 -->
+	<select id="updateBook" parameterType="bookCopyVO">
+		<![CDATA[
+			update book_info set book_title = #{title}, book_author=#{author}, book_published_date = #{publishDate} where book_isbn = #{isbn}"		
+		]]>		
+	</select>
+	
+	<!-- 도서 삭제 -->
+	<select id="deleteBook" parameterType="java.lang.Integer">
+		<![CDATA[
+			delete from book_copy where book_seq = #{bookSeq}
+		]]>		
+	</select>
+	
+	<!-- 도서 등록 -->
+	<select id="insertBook" parameterType="bookCopyVO">
+		<![CDATA[
+			insert into book_info(book_isbn, book_title, book_author, book_published_date) values (#{isbn},#{title},#{author},#{publishDate})
+		]]>		
+	</select>
+	<select id="insertCopy" parameterType="java.lang.String">
+		<![CDATA[
+				insert into book_copy(book_isbn) values (#{isbn})
+		]]>		
+	</select>
+
+</mapper>
